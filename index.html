@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Retorno</title>
+    <style>
+        body {
+            background-color: #333319; /* Cor de fundo escura */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #fff; /* Cor do texto */
+        }
+
+        .container {
+            display: flex;
+            overflow: hidden;
+            width: 1400px; /* Largura do livro dobrada */
+            height: 800px; /* Altura do livro */
+            background-color: #444; /* Cor de fundo do conteúdo */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            position: relative;
+            border-radius: 10px;
+            border: 15px solid #5a4a3a; /* Borda grossa como capa do livro */
+        }
+
+        .pages {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            width: 100%;
+            height: 100%;
+        }
+
+        .page {
+            flex: 0 0 50%; /* Cada página ocupa metade do container */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Linha de separação entre as páginas */
+        .page::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 2px;
+            background-color: #5a4a3a; /* Cor da linha de separação */
+        }
+
+        .page:last-child::after {
+            display: none; /* Remove a linha da última página */
+        }
+
+        .page h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .page h2 {
+            font-size: 1.5em;
+            color: #ccc;
+        }
+
+        /* Botões de navegação */
+        .nav-buttons {
+            position: absolute;
+            bottom: 20px;
+            display: flex;
+            gap: 20px; /* Espaço entre os botões */
+        }
+
+        /* Botão Prev - Lado Esquerdo */
+        .nav-buttons .prev {
+            left: 20px;
+        }
+
+        /* Botão Next - Lado Direito */
+        .nav-buttons .next {
+            right: 20px;
+        }
+
+        .nav-button {
+            width: 0;
+            height: 0;
+            border-style: solid;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s ease, border-color 0.3s ease;
+        }
+
+        .nav-button:hover {
+            opacity: 1;
+        }
+
+        .nav-button.prev {
+            border-width: 20px 30px 20px 0;
+            border-color: transparent #fff transparent transparent;
+        }
+
+        .nav-button.next {
+            border-width: 20px 0 20px 30px;
+            border-color: transparent transparent transparent #fff;
+        }
+
+        .nav-button.prev:hover {
+            border-color: transparent #ccc transparent transparent;
+        }
+
+        .nav-button.next:hover {
+            border-color: transparent transparent transparent #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="pages">
+            <!-- Página 1 e 2 -->
+            <div class="page" id="page1">
+                <h1>O Retorno</h1>
+                <h2>Obra Dinn</h2>
+            </div>
+            <div class="page" id="page2">
+                <h1>Um Catalogo de</h1>
+                <h2>Aventuras & Tragedias</h2>
+                <div class="nav-buttons">
+                    <div class="nav-button next" onclick="nextPage()"></div>
+                </div>
+            </div>
+            <!-- Página 3 e 4 -->
+            <div class="page" id="page3">
+                <h1>Página 3</h1>
+                <h2>Conteúdo adicional</h2>
+                <div class="nav-buttons">
+                    <div class="nav-button prev" onclick="prevPage()"></div>
+                </div>
+            </div>
+            <div class="page" id="page4">
+                <h1>Página 4</h1>
+                <h2>Mais conteúdo</h2>
+                <div class="nav-buttons">
+                    <div class="nav-button next" onclick="nextPage()"></div>
+                </div>
+            </div>
+            <!-- Página 5 e 6 -->
+            <div class="page" id="page5">
+                <h1>Página 5</h1>
+                <h2>Conteúdo extra</h2>
+                <div class="nav-buttons">
+                    <div class="nav-button prev" onclick="prevPage()"></div>
+                </div>
+            </div>
+            <div class="page" id="page6">
+                <h1>Página 6</h1>
+                <h2>Último conteúdo</h2>
+                <div class="nav-buttons">
+                    <div class="nav-button next" onclick="nextPage()"></div>
+                </div>
+            </div>
+            <!-- Página 7 e 8 (últimas) -->
+            <div class="page" id="page7">
+                <h1>Página 7</h1>
+                <h2>Penúltimo conteúdo</h2>
+                <div class="nav-buttons">
+                    <div class="nav-button prev" onclick="prevPage()"></div>
+                </div>
+            </div>
+            <div class="page" id="page8">
+                <h1>Página 8</h1>
+                <h2>Fim</h2>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPageIndex = 0;
+        const pagesContainer = document.querySelector('.pages');
+        const totalPages = document.querySelectorAll('.page').length / 2; // Cada "página" contém 2 páginas visíveis
+
+        function showPage(index) {
+            const offset = -index * 100; // Desloca o container para exibir a página correta
+            pagesContainer.style.transform = `translateX(${offset}%)`;
+        }
+
+        function nextPage() {
+            if (currentPageIndex < totalPages - 1) {
+                currentPageIndex++;
+                showPage(currentPageIndex);
+            }
+        }
+
+        function prevPage() {
+            if (currentPageIndex > 0) {
+                currentPageIndex--;
+                showPage(currentPageIndex);
+            }
+        }
+
+        showPage(currentPageIndex); // Exibe a primeira página ao carregar
+    </script>
+</body>
+</html>
